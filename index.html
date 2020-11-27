@@ -15,7 +15,7 @@
         document.body.appendChild( renderer.domElement );
 
         const geometryBox = new THREE.BoxGeometry( 1, 1, 1 );
-        const materialBox = new THREE.MeshBasicMaterial( {color: 0x00ff00, wireframe: true} );
+        const materialBox = new THREE.MeshBasicMaterial( {color: 0x00fff0, wireframe: true} );
         const cube = new THREE.Mesh( geometryBox, materialBox );
         scene.add( cube );
 
@@ -24,32 +24,46 @@
         const circle = new THREE.Mesh( geometryCircle, materialCircle );
         scene.add( circle );
 
+
+
         camera.position.z = 5;
         camera.position.y = 1;
-        camera.position.x = 1;
+        camera.position.x = 3.5;
 
         document.addEventListener('keydown', function(event) {
-            if (event.code == 'KeyZ') {
+            if (event.code == 'KeyD') {
                 cube.position.x += 1;
-                circle.position.y += 1;
             }
-            if (event.code == 'KeyC') {
+            if (event.code == 'KeyA') {
                 cube.position.x -= 1;
-                circle.position.y -= 1;
             }
         });
 
         function animate() {
             requestAnimationFrame( animate );
 
-            cube.rotation.x += 0.01;
-            cube.rotation.y += 0.01;
+            camera.position.z -= 0.5;
+            cube.position.z -= 0.5;
 
-            circle.rotation.x -= 0.01;
-            circle.rotation.y -= 0.01;
+                createCones(camera.position.x, camera.position.y, camera.position.z)
 
             renderer.render( scene, camera );
         }
+
+        function createCones( x, y, z ) {
+            for (let i = 0; i < 10; i++) {
+                const geometryCone = new THREE.ConeBufferGeometry( 0.5, 2, 32 );
+                const materialCone = new THREE.MeshBasicMaterial( {color: 0xffff00, wireframe: true } );
+                const cone = new THREE.Mesh( geometryCone, materialCone );
+
+                cone.position.x = i;
+                cone.position.z = z * 100;
+
+                scene.add(cone);
+            }
+
+        }
+
         animate();
     </script>
 </body>
