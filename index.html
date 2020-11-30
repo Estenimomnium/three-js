@@ -7,6 +7,7 @@
 <body>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r122/three.min.js"></script>
     <script>
+        const cones = [];
         const scene = new THREE.Scene();
         const camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 );
 
@@ -19,22 +20,15 @@
         const cube = new THREE.Mesh( geometryBox, materialBox );
         scene.add( cube );
 
-        const geometryCircle = new THREE.CircleGeometry( 1, 62 );
-        const materialCircle = new THREE.MeshBasicMaterial( { color: 0xffff00, wireframe: true } );
-        const circle = new THREE.Mesh( geometryCircle, materialCircle );
-        scene.add( circle );
-
-
-
         camera.position.z = 5;
-        camera.position.y = 1;
+        camera.position.y = 4;
         camera.position.x = 3.5;
 
         document.addEventListener('keydown', function(event) {
-            if (event.code == 'KeyD') {
+            if (event.code === 'KeyD') {
                 cube.position.x += 1;
             }
-            if (event.code == 'KeyA') {
+            if (event.code === 'KeyA') {
                 cube.position.x -= 1;
             }
         });
@@ -44,15 +38,26 @@
 
             camera.position.z -= 0.5;
             cube.position.z -= 0.5;
+            // check that cones is available to see for the player
+            // need to remove cones from array
 
-                createCones(camera.position.x, camera.position.y, camera.position.z)
+            console.log(cones);
+
+            cones.forEach((cone) => {
+               if (cone.position.z < camera.position.z - 2) {
+                   scene.add(cone);
+               }
+            });
+            cones.length = 0;
+
+            createCones(camera.position.x, camera.position.y, camera.position.z)
 
             renderer.render( scene, camera );
         }
 
         function createCones( x, y, z ) {
-            for (let i = 0; i < 10; i++) {
-                if (i % 2 == 0) {
+            for (let i = 0; i < 20; i++) {
+                if (Math.random() < 0.6) {
                     const geometryCone = new THREE.ConeBufferGeometry(0.5, 2, 32);
                     const materialCone = new THREE.MeshBasicMaterial({color: 0xffff00, wireframe: true});
                     const cone = new THREE.Mesh(geometryCone, materialCone);
@@ -60,7 +65,7 @@
                     cone.position.x = i;
                     cone.position.z = z * 100;
 
-                    scene.add(cone);
+                    cones.push(cone);
                 }
                 i++;
             }
